@@ -1,0 +1,18 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform float bop_distance = 20.0;
+uniform float bop_speed = 10.0;
+uniform float time_stamp = 0.0;
+
+void vertex() {
+	VERTEX += vec2(0.0, max((sin(time_stamp*bop_speed)*bop_distance),0.0));
+}"
+
+[resource]
+shader = SubResource( 1 )
+shader_param/bop_distance = 20.0
+shader_param/bop_speed = 10.0
+shader_param/time_stamp = 0.0

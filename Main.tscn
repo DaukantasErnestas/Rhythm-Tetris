@@ -1,0 +1,327 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://VFX/BobShader.tres" type="Material" id=1]
+[ext_resource path="res://Grid.png" type="Texture" id=2]
+[ext_resource path="res://Block.tscn" type="PackedScene" id=3]
+[ext_resource path="res://PieceScripts/PieceMain.gd" type="Script" id=4]
+[ext_resource path="res://Main.gd" type="Script" id=7]
+[ext_resource path="res://Pieces/J.tscn" type="PackedScene" id=8]
+
+[sub_resource type="Environment" id=1]
+background_mode = 4
+glow_enabled = true
+glow_intensity = 0.15
+glow_strength = 1.21
+glow_bloom = 0.05
+glow_blend_mode = 1
+glow_hdr_threshold = 0.5
+glow_hdr_luminance_cap = 31.69
+glow_hdr_scale = 0.0
+glow_high_quality = true
+
+[node name="World" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 150, 300 )
+current = true
+zoom = Vector2( 1.25, 1.25 )
+
+[node name="Main" type="Node2D" parent="."]
+material = ExtResource( 1 )
+script = ExtResource( 7 )
+
+[node name="Tween" type="Tween" parent="Main"]
+
+[node name="Tween2" type="Tween" parent="Main"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Main"]
+environment = SubResource( 1 )
+
+[node name="TextureRect" type="TextureRect" parent="Main"]
+material = ExtResource( 1 )
+margin_right = 320.0
+margin_bottom = 640.0
+texture = ExtResource( 2 )
+stretch_mode = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TickTimer" type="Timer" parent="Main"]
+wait_time = 0.5
+autostart = true
+
+[node name="PreDASTimer" type="Timer" parent="Main"]
+wait_time = 0.15
+one_shot = true
+
+[node name="DASTimer" type="Timer" parent="Main"]
+wait_time = 0.05
+
+[node name="PlaceTimer" type="Timer" parent="Main"]
+wait_time = 0.4
+one_shot = true
+
+[node name="Pieces" type="Node2D" parent="Main"]
+
+[node name="Walls" type="Node2D" parent="Main/Pieces"]
+modulate = Color( 1, 1, 1, 0 )
+script = ExtResource( 4 )
+inactive = true
+indestructible = true
+
+[node name="Block1" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, -192 )
+
+[node name="Block2" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, -160 )
+
+[node name="Block3" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, -128 )
+
+[node name="Block4" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, -96 )
+
+[node name="Block5" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, -64 )
+
+[node name="Block6" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, -32 )
+
+[node name="Block7" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 0 )
+
+[node name="Block8" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 32 )
+
+[node name="Block9" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 64 )
+
+[node name="Block10" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 96 )
+
+[node name="Block11" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 128 )
+
+[node name="Block12" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 160 )
+
+[node name="Block13" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 192 )
+
+[node name="Block14" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 224 )
+
+[node name="Block15" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 256 )
+
+[node name="Block16" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 288 )
+
+[node name="Block17" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 320 )
+
+[node name="Block18" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 352 )
+
+[node name="Block19" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 384 )
+
+[node name="Block20" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 416 )
+
+[node name="Block21" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 448 )
+
+[node name="Block22" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 480 )
+
+[node name="Block23" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 512 )
+
+[node name="Block24" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 544 )
+
+[node name="Block25" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 576 )
+
+[node name="Block26" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 608 )
+
+[node name="Block27" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( -32, 640 )
+
+[node name="Block28" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, -192 )
+
+[node name="Block29" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, -160 )
+
+[node name="Block30" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, -128 )
+
+[node name="Block31" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, -96 )
+
+[node name="Block32" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, -64 )
+
+[node name="Block33" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, -32 )
+
+[node name="Block34" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 0 )
+
+[node name="Block35" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 32 )
+
+[node name="Block36" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 64 )
+
+[node name="Block37" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 96 )
+
+[node name="Block38" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 128 )
+
+[node name="Block39" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 160 )
+
+[node name="Block40" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 192 )
+
+[node name="Block41" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 224 )
+
+[node name="Block42" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 256 )
+
+[node name="Block43" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 288 )
+
+[node name="Block44" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 320 )
+
+[node name="Block45" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 352 )
+
+[node name="Block46" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 384 )
+
+[node name="Block47" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 416 )
+
+[node name="Block48" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 448 )
+
+[node name="Block49" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 480 )
+
+[node name="Block50" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 512 )
+
+[node name="Block51" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 544 )
+
+[node name="Block52" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 576 )
+
+[node name="Block53" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 608 )
+
+[node name="Block54" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 320, 640 )
+
+[node name="Block55" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 288, 640 )
+
+[node name="Block56" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 256, 640 )
+
+[node name="Block57" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 224, 640 )
+
+[node name="Block58" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 192, 640 )
+
+[node name="Block59" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 160, 640 )
+
+[node name="Block60" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 128, 640 )
+
+[node name="Block61" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 96, 640 )
+
+[node name="Block62" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 64, 640 )
+
+[node name="Block63" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 32, 640 )
+
+[node name="Block64" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
+position = Vector2( 0, 640 )
+
+[node name="Things" type="Node2D" parent="Main/Pieces"]
+script = ExtResource( 4 )
+inactive = true
+
+[node name="Block" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 96, 544 )
+
+[node name="Block2" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 64, 544 )
+
+[node name="Block3" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 32, 544 )
+
+[node name="Block4" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 32, 512 )
+
+[node name="Block5" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 32, 480 )
+
+[node name="Block6" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 96, 480 )
+
+[node name="Block7" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 128, 480 )
+
+[node name="Block8" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 160, 480 )
+
+[node name="Block9" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 160, 512 )
+
+[node name="Block10" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 160, 544 )
+
+[node name="Block11" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 160, 576 )
+
+[node name="Block12" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 32, 576 )
+
+[node name="Block13" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 64, 576 )
+
+[node name="Block14" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 96, 576 )
+
+[node name="Block15" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 64, 608 )
+
+[node name="Block16" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 32, 608 )
+
+[node name="Block17" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
+position = Vector2( 160, 608 )
+
+[node name="J" parent="Main/Pieces" instance=ExtResource( 8 )]
+position = Vector2( 128, 32 )
+
+[connection signal="tween_completed" from="Main/Tween" to="Main" method="_on_Tween_tween_completed"]
+[connection signal="timeout" from="Main/TickTimer" to="Main" method="_on_TickTimer_timeout"]
+[connection signal="timeout" from="Main/PreDASTimer" to="Main" method="_on_PreDASTimer_timeout"]
+[connection signal="timeout" from="Main/DASTimer" to="Main" method="_on_DASTimer_timeout"]
+[connection signal="timeout" from="Main/PlaceTimer" to="Main" method="_on_PlaceTimer_timeout"]
