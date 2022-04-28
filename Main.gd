@@ -24,6 +24,8 @@ onready var place_time = 0.5
 onready var soft_drop_place_time = 0.25
 
 var held_piece = null
+var ghost_piece = null
+var ghost_transparency = 0.25
 
 var RNG = RandomNumberGenerator.new()
 
@@ -37,6 +39,9 @@ func _ready():
 	$PlaceTimer.wait_time = place_time
 	Global.block_size *= scale.x
 
+func _process(delta):
+	update_ghost_piece()
+
 func make_new_piece():
 	if pieces.size() == 0:
 		pieces = all_pieces.duplicate()
@@ -48,6 +53,12 @@ func make_new_piece():
 	piece_instance.global_position = Vector2(10*Global.block_size/2,Global.block_size)
 	$Pieces.add_child(piece_instance)
 	Global.current_piece = piece_instance
+	for ghost in $GhostBlocks.get_children():
+		ghost.queue_free()
+	var ghost_instance = piece_names[Global.current_piece.piece_name].instance()
+	$GhostBlocks.add_child(ghost_instance)
+	ghost_instance.modulate.a = ghost_transparency
+	ghost_piece = ghost_instance
 
 func check_lines():
 	for y in range(20):
@@ -119,10 +130,13 @@ func _input(event):
 	Global.current_piece.move_x(move_dir.x)
 	if event.is_action_pressed("rotate_clockwise"):
 		Global.current_piece.rotate(1)
+		update_ghost_piece_rotation()
 	if event.is_action_pressed("rotate_counterclockwise"):
 		Global.current_piece.rotate(-1)
+		update_ghost_piece_rotation()
 	if event.is_action_pressed("rotate_180"):
 		Global.current_piece.rotate_180()
+		update_ghost_piece_rotation()
 	if event.is_action_pressed("soft_drop"):
 		$TickTimer.wait_time = 1.0/soft_drop_fall_speed
 		$TickTimer.start()
@@ -146,6 +160,12 @@ func _input(event):
 			held_piece = Global.current_piece.piece_name
 			Global.current_piece.queue_free()
 			Global.current_piece = piece_instance
+			for ghost in $GhostBlocks.get_children():
+				ghost.queue_free()
+			var ghost_instance = piece_names[Global.current_piece.piece_name].instance()
+			$GhostBlocks.add_child(ghost_instance)
+			ghost_instance.modulate.a = ghost_transparency
+			ghost_piece = ghost_instance
 			update_hold_visual()
 		else:
 			held_piece = Global.current_piece.piece_name
@@ -164,6 +184,19 @@ func update_hold_visual():
 		var piece_instance = piece_names[held_piece].instance()
 		get_parent().get_node("ThingsSide/Hold/BlockPos").add_child(piece_instance)
 		piece_instance.position = piece_instance.spawn_offset * Global.block_size
+
+func update_ghost_piece_rotation():
+	var block_index = 0
+	var current_piece_blocks = Global.current_piece.get_children()
+	for block in ghost_piece.get_children():
+		block.position = current_piece_blocks[block_index].position
+		block_index += 1
+
+func update_ghost_piece():
+	ghost_piece.global_position = Global.current_piece.global_position
+	var on_ground = false
+	while !on_ground:
+		on_ground = ghost_piece.move(false)
 
 func _on_TickTimer_timeout():
 	Global.current_piece.move(false)

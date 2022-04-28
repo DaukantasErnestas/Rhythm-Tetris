@@ -301,6 +301,8 @@ position = Vector2( 32, 640 )
 [node name="Block64" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
 position = Vector2( 0, 640 )
 
+[node name="GhostBlocks" type="Node2D" parent="Main"]
+
 [node name="ThingsSide" type="Control" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
