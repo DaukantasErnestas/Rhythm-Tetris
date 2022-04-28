@@ -1,11 +1,13 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://VFX/BobShader.tres" type="Material" id=1]
 [ext_resource path="res://Grid.png" type="Texture" id=2]
 [ext_resource path="res://Block.tscn" type="PackedScene" id=3]
 [ext_resource path="res://PieceScripts/PieceMain.gd" type="Script" id=4]
+[ext_resource path="res://ThingLeft.png" type="Texture" id=6]
 [ext_resource path="res://Main.gd" type="Script" id=7]
-[ext_resource path="res://Pieces/J.tscn" type="PackedScene" id=8]
+[ext_resource path="res://fonts/RadioCanada/RadioCanada-Bold.ttf" type="DynamicFontData" id=8]
+[ext_resource path="res://border.png" type="Texture" id=9]
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
@@ -19,6 +21,38 @@ glow_hdr_luminance_cap = 31.69
 glow_hdr_scale = 0.0
 glow_high_quality = true
 
+[sub_resource type="DynamicFont" id=2]
+font_data = ExtResource( 8 )
+
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+
+uniform float vignette_intensity = 0.4;
+uniform float vignette_opacity : hint_range(0.0, 1.0) = 0.5;
+uniform vec4 vignette_rgb : hint_color = vec4(0.0, 0.0, 0.0, 1.0);
+
+float vignette(vec2 uv){
+	uv *= 1.0 - uv.xy;
+	float vignette = uv.x * uv.y * 15.0;
+	return pow(vignette, vignette_intensity * vignette_opacity);
+}
+
+void fragment(){
+	vec4 color = texture(SCREEN_TEXTURE, SCREEN_UV);
+	vec4 text = texture(TEXTURE, UV);
+	
+	text.rgba *= (vignette_rgb.rgba);
+	text.rgba *= (1.0 - vignette(UV));
+	
+	COLOR = vec4((text.rgb).rgb,text.a);
+}"
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 3 )
+shader_param/vignette_intensity = 0.5
+shader_param/vignette_opacity = 0.2
+shader_param/vignette_rgb = Color( 1, 1, 1, 1 )
+
 [node name="World" type="Node2D"]
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -29,6 +63,11 @@ zoom = Vector2( 1.25, 1.25 )
 [node name="Main" type="Node2D" parent="."]
 material = ExtResource( 1 )
 script = ExtResource( 7 )
+
+[node name="Border" type="Sprite" parent="Main"]
+material = ExtResource( 1 )
+position = Vector2( 160, 320 )
+texture = ExtResource( 9 )
 
 [node name="Tween" type="Tween" parent="Main"]
 
@@ -262,63 +301,53 @@ position = Vector2( 32, 640 )
 [node name="Block64" parent="Main/Pieces/Walls" instance=ExtResource( 3 )]
 position = Vector2( 0, 640 )
 
-[node name="Things" type="Node2D" parent="Main/Pieces"]
-script = ExtResource( 4 )
-inactive = true
+[node name="ThingsSide" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Block" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 96, 544 )
+[node name="Hold" type="NinePatchRect" parent="ThingsSide"]
+material = ExtResource( 1 )
+margin_left = -122.0
+margin_right = -2.0
+margin_bottom = 100.0
+texture = ExtResource( 6 )
+patch_margin_left = 21
+patch_margin_top = 43
+patch_margin_right = 19
+patch_margin_bottom = 19
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Block2" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 64, 544 )
+[node name="Text" type="Label" parent="ThingsSide/Hold"]
+material = ExtResource( 1 )
+margin_right = 120.0
+margin_bottom = 22.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 2 )
+text = "HOLD"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Block3" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 32, 544 )
+[node name="BlockPos" type="Node2D" parent="ThingsSide/Hold"]
+position = Vector2( 60, 61 )
+scale = Vector2( 0.75, 0.75 )
 
-[node name="Block4" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 32, 512 )
+[node name="UI" type="CanvasLayer" parent="."]
 
-[node name="Block5" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 32, 480 )
-
-[node name="Block6" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 96, 480 )
-
-[node name="Block7" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 128, 480 )
-
-[node name="Block8" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 160, 480 )
-
-[node name="Block9" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 160, 512 )
-
-[node name="Block10" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 160, 544 )
-
-[node name="Block11" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 160, 576 )
-
-[node name="Block12" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 32, 576 )
-
-[node name="Block13" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 64, 576 )
-
-[node name="Block14" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 96, 576 )
-
-[node name="Block15" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 64, 608 )
-
-[node name="Block16" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 32, 608 )
-
-[node name="Block17" parent="Main/Pieces/Things" instance=ExtResource( 3 )]
-position = Vector2( 160, 608 )
-
-[node name="J" parent="Main/Pieces" instance=ExtResource( 8 )]
-position = Vector2( 128, 32 )
+[node name="ColorRect" type="ColorRect" parent="UI"]
+material = SubResource( 4 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [connection signal="tween_completed" from="Main/Tween" to="Main" method="_on_Tween_tween_completed"]
 [connection signal="timeout" from="Main/TickTimer" to="Main" method="_on_TickTimer_timeout"]

@@ -12,6 +12,7 @@ onready var PieceS = preload("res://Pieces/S.tscn")
 onready var PieceZ = preload("res://Pieces/Z.tscn")
 onready var PieceT = preload("res://Pieces/T.tscn")
 
+onready var piece_names = {"I":PieceI,"J":PieceJ,"L":PieceL,"O":PieceO,"S":PieceS,"T":PieceT,"Z":PieceZ}
 onready var all_pieces = [PieceI,PieceJ,PieceL,PieceO,PieceS,PieceT,PieceZ]
 onready var pieces = []
 
@@ -22,6 +23,8 @@ onready var soft_drop_fall_speed = 10
 onready var place_time = 0.5
 onready var soft_drop_place_time = 0.25
 
+var held_piece = null
+
 var RNG = RandomNumberGenerator.new()
 
 func _init():
@@ -29,7 +32,7 @@ func _init():
 
 func _ready():
 	Global.main_scene = self
-	Global.current_piece = $Pieces/J
+	make_new_piece()
 	$TickTimer.wait_time = 1.0/normal_fall_speed
 	$PlaceTimer.wait_time = place_time
 	Global.block_size *= scale.x
@@ -118,6 +121,8 @@ func _input(event):
 		Global.current_piece.rotate(1)
 	if event.is_action_pressed("rotate_counterclockwise"):
 		Global.current_piece.rotate(-1)
+	if event.is_action_pressed("rotate_180"):
+		Global.current_piece.rotate_180()
 	if event.is_action_pressed("soft_drop"):
 		$TickTimer.wait_time = 1.0/soft_drop_fall_speed
 		$TickTimer.start()
@@ -130,8 +135,35 @@ func _input(event):
 		while on_ground == false:
 			on_ground = Global.current_piece.move(true)
 		$Tween.stop_all()
-		$Tween.interpolate_property(material,"shader_param/time_stamp",null,PI/10,0.2,Tween.TRANS_LINEAR,Tween.EASE_IN_OUT)
+		material.set_shader_param("time_stamp",0)
+		$Tween.interpolate_property(material,"shader_param/time_stamp",null,PI/10,0.1,Tween.TRANS_LINEAR,Tween.EASE_IN_OUT)
 		$Tween.start()
+	if event.is_action_pressed("hold"):
+		if held_piece != null:
+			var piece_instance = piece_names[held_piece].instance()
+			piece_instance.global_position = Vector2(10*Global.block_size/2,Global.block_size)
+			$Pieces.add_child(piece_instance)
+			held_piece = Global.current_piece.piece_name
+			Global.current_piece.queue_free()
+			Global.current_piece = piece_instance
+			update_hold_visual()
+		else:
+			held_piece = Global.current_piece.piece_name
+			Global.current_piece.queue_free()
+			make_new_piece()
+			update_hold_visual()
+
+func update_hold_visual():
+	if get_parent().get_node("ThingsSide/Hold/BlockPos").get_children().size() != 0:
+		for visual_piece in get_parent().get_node("ThingsSide/Hold/BlockPos").get_children():
+			visual_piece.queue_free()
+		var piece_instance = piece_names[held_piece].instance()
+		get_parent().get_node("ThingsSide/Hold/BlockPos").add_child(piece_instance)
+		piece_instance.position = piece_instance.spawn_offset * Global.block_size
+	else:
+		var piece_instance = piece_names[held_piece].instance()
+		get_parent().get_node("ThingsSide/Hold/BlockPos").add_child(piece_instance)
+		piece_instance.position = piece_instance.spawn_offset * Global.block_size
 
 func _on_TickTimer_timeout():
 	Global.current_piece.move(false)
