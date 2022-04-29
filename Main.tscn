@@ -1,9 +1,10 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://VFX/BobShader.tres" type="Material" id=1]
 [ext_resource path="res://Grid.png" type="Texture" id=2]
 [ext_resource path="res://Block.tscn" type="PackedScene" id=3]
 [ext_resource path="res://PieceScripts/PieceMain.gd" type="Script" id=4]
+[ext_resource path="res://ThingRight.png" type="Texture" id=5]
 [ext_resource path="res://ThingLeft.png" type="Texture" id=6]
 [ext_resource path="res://Main.gd" type="Script" id=7]
 [ext_resource path="res://fonts/RadioCanada/RadioCanada-Bold.ttf" type="DynamicFontData" id=8]
@@ -339,6 +340,53 @@ __meta__ = {
 
 [node name="BlockPos" type="Node2D" parent="ThingsSide/Hold"]
 position = Vector2( 60, 61 )
+scale = Vector2( 0.75, 0.75 )
+
+[node name="Next" type="NinePatchRect" parent="ThingsSide"]
+material = ExtResource( 1 )
+margin_left = 322.0
+margin_right = 442.0
+margin_bottom = 408.0
+texture = ExtResource( 5 )
+patch_margin_left = 21
+patch_margin_top = 43
+patch_margin_right = 19
+patch_margin_bottom = 19
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Text" type="Label" parent="ThingsSide/Next"]
+material = ExtResource( 1 )
+margin_right = 120.0
+margin_bottom = 22.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 2 )
+text = "NEXT"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BlockPos1" type="Node2D" parent="ThingsSide/Next"]
+position = Vector2( 60, 61 )
+scale = Vector2( 0.75, 0.75 )
+
+[node name="BlockPos2" type="Node2D" parent="ThingsSide/Next"]
+position = Vector2( 60, 138 )
+scale = Vector2( 0.75, 0.75 )
+
+[node name="BlockPos3" type="Node2D" parent="ThingsSide/Next"]
+position = Vector2( 60, 215 )
+scale = Vector2( 0.75, 0.75 )
+
+[node name="BlockPos4" type="Node2D" parent="ThingsSide/Next"]
+position = Vector2( 60, 292 )
+scale = Vector2( 0.75, 0.75 )
+
+[node name="BlockPos5" type="Node2D" parent="ThingsSide/Next"]
+position = Vector2( 60, 369 )
 scale = Vector2( 0.75, 0.75 )
 
 [node name="UI" type="CanvasLayer" parent="."]

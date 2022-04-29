@@ -30,6 +30,11 @@ func move(hard_drop) -> bool:
 			Global.main_scene.make_new_piece()
 		return true
 
+func hard_drop():
+	var on_ground = false
+	while on_ground == false:
+		on_ground = move(true)
+
 func can_move_x(dirx) -> bool:
 	for block in get_children():
 		if !Global.placed_block_positions.has(block.global_position+Vector2(Global.block_size*dirx,0)):
@@ -232,5 +237,3 @@ func _process(delta):
 		var gravity_check_result = check_gravity()
 		if !gravity_check_result and Global.main_scene.get_node("PlaceTimer").is_stopped():
 			Global.main_scene.get_node("PlaceTimer").start()
-		elif gravity_check_result:
-			Global.main_scene.get_node("PlaceTimer").stop()
