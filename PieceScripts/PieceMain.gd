@@ -3,7 +3,11 @@ extends Node2D
 var rotation_index = 0
 var rotation_matrix = []
 var piece_name = ""
+var visual_spawn_offset = Vector2(0,0)
 var spawn_offset = Vector2(0,0)
+var touched_ground = false
+var actions_after_touch = 0
+var max_actions_after_touch = 15
 
 export(bool) var inactive = false
 export(bool) var indestructible = false
@@ -26,14 +30,23 @@ func move(hard_drop) -> bool:
 	else:
 		if hard_drop:
 			deactivate_piece()
-			Global.main_scene.check_lines()
-			Global.main_scene.make_new_piece()
+			var cleared_lines = Global.main_scene.check_lines()
+			var negative_pos_blocks = 0
+			for block in get_children():
+				if block.global_position.y < 0:
+					negative_pos_blocks += 1
+			if negative_pos_blocks == 4 and !cleared_lines:
+				Global.main_scene.on_fail()
+			else:
+				Global.main_scene.make_new_piece()
 		return true
 
 func hard_drop():
 	var on_ground = false
 	while on_ground == false:
 		on_ground = move(true)
+	if !Global.main_scene.get_node("PlaceTimer").is_stopped():
+		Global.main_scene.get_node("PlaceTimer").stop()
 
 func can_move_x(dirx) -> bool:
 	for block in get_children():
@@ -44,8 +57,14 @@ func can_move_x(dirx) -> bool:
 	return true
 
 func move_x(dirx) -> void:
-	if can_move_x(dirx):
+	if can_move_x(dirx) and dirx != 0:
 		global_position.x += Global.block_size*dirx
+		if !Global.main_scene.get_node("PlaceTimer").is_stopped():
+			if actions_after_touch+1 < max_actions_after_touch:
+				Global.main_scene.get_node("PlaceTimer").start()
+				actions_after_touch += 1
+			else:
+				hard_drop()
 	
 func deactivate_piece() -> void:
 	for block in get_children():
@@ -163,7 +182,11 @@ func rotate(dir):
 			block_index += 1
 		global_position += rotation_check_result*Global.block_size
 		if !Global.main_scene.get_node("PlaceTimer").is_stopped():
-			Global.main_scene.get_node("PlaceTimer").start()
+			if actions_after_touch+1 < max_actions_after_touch:
+				Global.main_scene.get_node("PlaceTimer").start()
+				actions_after_touch += 1
+			else:
+				hard_drop()
 	else:
 		rotation_index = previous_rot_index
 
@@ -226,7 +249,11 @@ func rotate_180():
 			block_index += 1
 		global_position += rotation_check_result*Global.block_size
 		if !Global.main_scene.get_node("PlaceTimer").is_stopped():
-			Global.main_scene.get_node("PlaceTimer").start()
+			if actions_after_touch+1 < max_actions_after_touch:
+				Global.main_scene.get_node("PlaceTimer").start()
+				actions_after_touch += 1
+			else:
+				hard_drop()
 	else:
 		rotation_index = previous_rot_index
 
@@ -237,3 +264,4 @@ func _process(delta):
 		var gravity_check_result = check_gravity()
 		if !gravity_check_result and Global.main_scene.get_node("PlaceTimer").is_stopped():
 			Global.main_scene.get_node("PlaceTimer").start()
+			touched_ground = true

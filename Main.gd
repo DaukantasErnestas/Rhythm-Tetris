@@ -17,7 +17,6 @@ onready var all_pieces = [PieceI,PieceJ,PieceL,PieceO,PieceS,PieceT,PieceZ]
 onready var pieces = []
 onready var pieces2 = []
 
-
 onready var normal_fall_speed = 0.01
 onready var soft_drop_fall_speed = 10
 
@@ -54,8 +53,18 @@ func make_new_piece():
 	RNG.randomize()
 	var piece_instance = pieces.pop_front().instance()
 	pieces.append(pieces2.pop_front())
-	piece_instance.global_position = Vector2(10*Global.block_size/2,Global.block_size)
+	piece_instance.global_position = Vector2(10*Global.block_size/2,-Global.block_size*2)
 	$Pieces.add_child(piece_instance)
+	piece_instance.global_position += piece_instance.spawn_offset * Vector2(Global.block_size,Global.block_size)
+	var can_spawn = true
+	for block in piece_instance.get_children():
+		if Global.placed_block_positions.has(block.global_position):
+			can_spawn = false
+			break
+	if !can_spawn:
+		piece_instance.queue_free()
+		on_fail()
+		return
 	Global.current_piece = piece_instance
 	for ghost in $GhostBlocks.get_children():
 		ghost.queue_free()
@@ -107,8 +116,10 @@ func check_lines():
 		found_pieces.clear()
 	if lines_cleared > 0:
 		on_lines_cleared(lines_cleared)
+		return true
 	else:
 		do_bop_effect(5,10,0.1)
+		return false
 
 func on_lines_cleared(line_amount):
 	do_bop_effect(line_amount*5+5,10,0.2)
@@ -165,8 +176,18 @@ func _input(event):
 	if event.is_action_pressed("hold"):
 		if held_piece != null:
 			var piece_instance = piece_names[held_piece].instance()
-			piece_instance.global_position = Vector2(10*Global.block_size/2,Global.block_size)
+			piece_instance.global_position = Vector2(10*Global.block_size/2,-Global.block_size*2)
 			$Pieces.add_child(piece_instance)
+			piece_instance.global_position += piece_instance.spawn_offset * Vector2(Global.block_size,Global.block_size)
+			var can_spawn = true
+			for block in piece_instance.get_children():
+				if Global.placed_block_positions.has(block.global_position):
+					can_spawn = false
+					break
+			if !can_spawn:
+				piece_instance.queue_free()
+				on_fail()
+				return
 			held_piece = Global.current_piece.piece_name
 			Global.current_piece.queue_free()
 			Global.current_piece = piece_instance
@@ -191,11 +212,11 @@ func update_hold_visual():
 			visual_piece.queue_free()
 		var piece_instance = piece_names[held_piece].instance()
 		get_parent().get_node("ThingsSide/Hold/BlockPos").add_child(piece_instance)
-		piece_instance.position = piece_instance.spawn_offset * Global.block_size
+		piece_instance.position = piece_instance.visual_spawn_offset * Global.block_size
 	else:
 		var piece_instance = piece_names[held_piece].instance()
 		get_parent().get_node("ThingsSide/Hold/BlockPos").add_child(piece_instance)
-		piece_instance.position = piece_instance.spawn_offset * Global.block_size
+		piece_instance.position = piece_instance.visual_spawn_offset * Global.block_size
 
 func update_ghost_piece_rotation():
 	var block_index = 0
@@ -219,7 +240,7 @@ func update_next_piece_visual():
 			var visual_block_instance = null
 			visual_block_instance = pieces[block_index].instance()
 			block_holder.add_child(visual_block_instance)
-			visual_block_instance.position = visual_block_instance.spawn_offset * Global.block_size
+			visual_block_instance.position = visual_block_instance.visual_spawn_offset * Global.block_size
 			block_index += 1
 
 func do_bop_effect(height,speed,time):
@@ -229,6 +250,11 @@ func do_bop_effect(height,speed,time):
 	material.set_shader_param("bop_distance",height)
 	$Tween.interpolate_property(material,"shader_param/time_stamp",null,PI/10,time,Tween.TRANS_LINEAR,Tween.EASE_IN_OUT)
 	$Tween.start()
+
+func on_fail():
+	Global.placed_blocks.clear()
+	Global.placed_block_positions.clear()
+	get_tree().reload_current_scene()
 
 func _on_TickTimer_timeout():
 	Global.current_piece.move(false)
